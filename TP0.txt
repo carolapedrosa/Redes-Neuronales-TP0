@@ -1,0 +1,68 @@
+1. Qué relación hay entre el TF-IDF y el CountVectorizer?
+
+Es importante poder elegir la mejor representacion vectorial (es decir, numerica) para los strings de texto. Para que la computadora entienda los datos en forma de texto, debemos convertir el texto a numeros pero conservando la informacion linguistica para el analisis. Para ello, existen 2 maneras: Count Vectorizer y TF-IDF.
+
+Count Vectorizer es una forma de convertir un set de strings a una representacion en frecuencia. Basicamente, se tiene una representacion numerica de cuantas veces una determinada palabra se repite en un string (se cuenta la frecuencia de aparicion de las palabras claves). Sin embargo, count vectorizer tiene algunas desventajas:
+- No puede identificar que palabras son mas importantes que otras para el analisis
+- La palabra mas repetida en el texto sera (estadisticamente) la mas importante, cosa que no siempre se cumple.
+- No identifica la semejanza linguistica entre palabras (sinonimos)
+
+Por otro lado, se tiene TF- IDF: Term Frequency- Inverse Document Frequency. En este metodo, tambien se cuenta la frecuencia de ciertas palabras pero se tiene en consideracion ademas una representacion numerica de que tan importante es la palabra para analisis estadistico. TF- IDF se basa en que las palabras que se repiten mucho y las palabras que aparecen pocas veces no son estadisticamente importantes para encontrar algun tipo de patron. El algoritmo penaliza tanto las palabras que tienen mucha frecuencia de aparicion como las que aparecen pocas veces, y esto se hace dando un TF- IDF score bajo. Cuanto mas alto es el score, mas importante es la palabra, y viceversa.
+La desventaja de TF- IDF es que no provee informacion linguistica de las palabras, como por ejemplo relacionado a su significado real o similitud entre palabras.
+
+En general, TF-IDF es mejor que Count Vectorizer porque no solo se centra en la frecuencia de las palabras sino tambien en su importancia. De esta manera, se puede reducir el tamaño y la complejidad del modelo porque se sacan las palabras con menos importancia.
+
+
+2) Explique el concepto de Bag Of Words
+
+
+Bag of Words es en esencia una forma de extraer ciertos parametros de algun texto para usar en machine learning (por ejemplo). Es una representacion de texto que describe la ocurrencia de palabras en un documento, y posee:
+1. Un vocabulario de palabras conocidas (tokens)
+2. Una medida de la presencia de dichas palabras conocidas. 
+
+Se llama "Bag of words" porque no se tiene en cuenta el orden de las palabras, al modelo solo le importa si hay palabras conocidas. Para resumir el concepto, se trata de hacer un histograma de las palabras en un texto. Este modelo puede ser tan simple o complejo como se desee.
+
+
+3) Para validar sus resultados deberá utilizar siempre el método Hold-Out validation. Explíquelo y compárelo con K-Folding (investigar).
+
+
+Primero, empezare por explicar un poco de K- Folding. Para ello, creo que es util entender cada una de las palabras que componen el termino " K Folding Cross Validation"
+K: se refiere a cantidad de elementos, como 1,2,3,... , K.
+Fold: se refiere a que vamos "doblando" algo sobre si mismo.
+Cross: como una cruz, que vamos para atras y hacia adelante una y otra vez.
+Validation: se refiere a probar la exactitud del modelo.
+
+En K Fold Cross Validation la sample original se particiona (aleatoriamente) en K partes iguales. De los K subsamples, solo 1 se retiene como data para validar, mientras que los otros K-1 se usan como datos de entrenamiento. Este procedimiento de validacion cruzada se repite K veces, con cada uno de los subsamples usados como data de validacion una vez. Finalmente, todos estos resultados se promedian para producir una sola estimacion.
+
+Por otro lado, en Hold- Out validation se divide los datos en 2 sets: set de entrenamiento, set de validacion y testing. Normalmente, se usa el 80% de los datos para training y el 20% para validacion. Se usa para analizar que tan bien un modelo va a resultar frente a un set nuevo de datos. Este proceso es usado para la evaluacion de un modelo separando los datos en "training" y "test" pero usando un set de hiperparametros fijo.
+
+
+Normalmente, se prefiere usar K Fold Cross Validation puesto que le da al modelo la oportunidad de entrenarse con varias "combinaciones" de sets de train y test. Esto da una mejor perspectiva de como va a operar el modelo con datos nuevos. Sin embargo, hold out depende de un solo set de train y test, lo que lo hace dependiente de como se divieron los datos en esos sets. A veces se prefiere usar Hold Out si se tiene un dataset muy grande y no se tiene mucho tiempo para entrenarlo, o como una prueba inicial del modelo. Esto sucede porque como K- Fold- Cross Validation requiere varios conjuntos de train y test, entonces requiere mas poder computacional y mas tiempo para correr que el metodo de Hold Out.
+
+
+4) Explique la métrica utilizada en la competencia (Macro AUC-ROC). Investigue la métrica F1-score. Compárelas. 
+
+AUC ROC: Area Under the Curve Receiver Operating Characteristics. Es uno de los metodos de evaluacion mas importantes para analizar la performance de un modelo de clasificacion. ROC es una curva de probabilidad y AUC representa que tanto el modelo es capaz de separar entre clases. Cuanto mayor es el AUC, mejor es el modelo en predecir la clase 0 como un 0 y la clase 1 como un 1. Un modelo muy bueno tiene un AUC ~ 1, lo cual quiere decir que tiene un buen grado de separabilidad. Un modelo malo tiene AUC ~ 0, lo cual indica que tiene poca separabilidad, es decir que predice la clase 0 como 1 y la 1 como 0. Cuando el AUC ~ 0.5, quiere decir que el modelo no puede separar entre clases. 
+El mejor caso se da cuando las curvas de distribucion no se tocan, y el umbral esta puesto en 0.5. Esto quiere decir que el modelo tiene un grado ideal de separabilidad, y es perfectamente capaz de distinguir entre la clase 0 y la 1. En este caso la curva ROC posee un "angulo" de 90 grados.
+Sin embargo, cuando las distribuciones se solapan, se producen errores de tipo 1 y tipo 2. Cambiando el umbral de desicion se puede minimizar o maximizar alguno de los errores. Por ejemplo, cuando AUC es 0.6, quiere decir que hay 60% de chances de que el modelo pueda distinguir entre la clase 0 y 1.
+Finalmente, cuando AUC ~ 0.5, el modelo no distingue clase 0 y 1, por lo que la curva ROC es una recta y las curvas de probabilidad se encuentran superpuestas.    
+
+Por otro lado, la metrica F1 se basa en dos metricas: precision y recall. Estas metricas nos ayudan a evaluar la performance predictiva de un modelo de clasificacion sobre una clase particular. Por un lado, la precision nos dice cuantas de todas las predicciones positivas eran realmente positivas, y el recall nos dice de todos los casos positivos que realmente tengo, cuantos de ellos fueron predecidos como positivos.
+Precision= TP/ (TP + FP)
+Recall= TP/ (TP + FN)
+
+La precision mide el error causado por los falsos positivos (FP), mientras que recall mide el error causado por los falsos negativos (FN). La metrica que se termine usando depende del problema y del impacto que cada uno de estos errores pueda tener. 
+Un ejemplo es por ejemplo si se quiere predecir si una persona tendra o no cancer. Si realmente no tiene cancer pero mi modelo predice que si, eso es un falso positivo. Si la persona tiene cancer y mi modelo predice que no, es un falso negativo. En este caso, es argumentable que tiene mas impacto el falso negativo que el falso positivo, puesto que una persona que necesita tratamiento no lo estaria teniendo. Por ello, busco un modelo que tenga la menor cantidad de FN posible.
+Normalmente, es deseable maximizar tanto la precision como el recall (minimizar FP y FN), pero en la practica no es posible por la relacion de compromiso que hay entre ellos, dado que al subir la precision baja el recall y vice versa. 
+El F1- Score combina precision y recall en un solo numero segun la formula:
+F1-Score= 2 * ( Precision * Recall) / (Precision + Recall).
+Se ve que cuento mas alta son la precision y el recall, mas alto es el F1- Score. Es un parametro que va entre 0 y 1, y cuanto mas se acerque a 1 mejor es el modelo.
+Luego, elijo F1- Score cuando ambos tipos de errores (FP y FN) no son deseables.
+
+
+Para comparar ambas metricas, notamos que cada una busca maximizar un cierto aspecto:
+AUC-ROC: maximiza la specificity, que es la fraccion de samples indicadas como negativas que son correctamente categorizadas. No se mira la cantidad de samples indicadas como positivas y correctamente identificadas.
+F1- Score: maximiza la precision, es decir, la cantidad de samples indicadas como positivas y correctamente identificadas. No se considera que tan bien estan las samples marcadas como negativas (la specificity).
+
+Por ejemplo, si se tiene un dataset donde hay muchos mas negativos que positivos (ej: categorizar gente que posee alguna enfermedad rara). Usar AUC en este caso no es optimo puesto que busco que la cantidad de gente que marque como positiva (es decir, enferma) realmente lo este. En este caso conviene usar F1- Score. 
+Sin embargo, si tengo un dataset que es mas o menos equitativo en las clases (50% positivo y 50% negativo) conviene usar AUC, puesto que me importa la performance que tengo al identificar cada clase, tanto positiva como negativa.
